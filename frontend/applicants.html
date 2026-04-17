@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Applicants | SAMTECH SECURITY</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <script>
+    const role = localStorage.getItem("role");
+    if (!role) {
+      window.location.href = "login.html";
+    } else if (role !== "client") {
+      window.location.href = "dashboard-expert.html";
+    }
+  </script>
+
+  <div class="sidebar">
+    <div class="logo">SAMTECH</div>
+    <ul>
+      <li><a href="dashboard-client.html">Dashboard</a></li>
+      <li><a href="post-job.html">Post Job</a></li>
+      <li><a href="messages.html">Messages</a></li>
+      <li><a href="profile.html">Profile</a></li>
+      <li><a href="#" onclick="logout()">Logout</a></li>
+    </ul>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <h2>Job Applicants</h2>
+      <div class="profile">
+        <span id="userName">Client</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Applicants List</h3>
+      <div id="applicantsContainer">Loading applicants...</div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "http://localhost:5000/api";
+    const token = localStorage.getItem("token");
+    const userName = localStorage.getItem("name") || "Client";
+    document.getElementById("userName").textContent = userName;
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "login.html";
+    }
+
+    function getJobId() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("jobId");
+    }
+
+    async function loadApplicants() {
+      const jobId = getJobId();
+      const container = document.getElementById("applicantsContainer");
+
+      if (!jobId) {
+        container.innerHTML = "<p>No job selected.</p>";
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_URL}/applications/job/${jobId}`, {
+          headers: {
+            "Authorization": token
+          }
+        });
+
+        const applications = await res.json();
+
+        if (!Array.isArray(applications)) {
+          container.innerHTML = `<p>${applications.msg || "Unable to load applicants."}</p>`;
+          return;
+        }
+
+        if (applications.length === 0) {
+          container.innerHTML = "<p>No applicants yet for this job.</p>";
+          return;
+        }
+
+        container.innerHTML = applications.map(app => `
+          <div class="job-item">
+            <div class="applicant-header">
+              <img src="${app.expert?.profilePic || 'https://via.placeholder.com/80'}" class="mini-avatar" alt="avatar">
+              <div>
+                <h4>${app.expert?.name || "Expert"}</h4>
+                <p><strong>Username:</strong> @${app.expert?.username || "unknown"}</p>
+                <p><strong>Email:</strong> ${app.expert?.email || "Not available"}</p>
+                <p><strong>Phone:</strong> ${app.expert?.contact?.phone || "Not available"}</p>
+              </div>
+            </div>
+
+            <p><strong>Skills:</strong> ${Array.isArray(app.expert?.skills) ? app.expert.skills.join(", ") : "None listed"}</p>
+            <p><strong>Bio:</strong> ${app.expert?.bio || "No bio provided."}</p>
+            <p><strong>Status:</strong> <span class="status-badge status-${app.status}">${app.status}</span></p>
+
+            <div class="action-row">
+              <button onclick="updateStatus('${app._id}', 'accepted')">Approve</button>
+              <button class="danger-btn" onclick="updateStatus('${app._id}', 'rejected')">Reject</button>
+              <button onclick="openChatWith('${app.expert?.username || ""}')">Message Expert</button>
+            </div>
+          </div>
+        `).join("");
+      } catch (error) {
+        console.error(error);
+        container.innerHTML = "<p>Server connection failed.</p>";
+      }
+    }
+
+    async function updateStatus(applicationId, status) {
+      try {
+        const res = await fetch(`${API_URL}/applications/${applicationId}/status`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": token
+          },
+          body: JSON.stringify({ status })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          alert(data.msg || "Failed to update status");
+          return;
+        }
+
+        alert("Application updated successfully");
+        loadApplicants();
+      } catch (error) {
+        console.error(error);
+        alert("Server connection failed");
+      }
+    }
+
+    function openChatWith(username) {
+      if (!username) return;
+      window.location.href = `messages.html?username=${encodeURIComponent(username)}`;
+    }
+
+    loadApplicants();
+  </script>
+</body>
+</html>
