@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Live Chat | SAMTECH</title>
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+</head>
+
+<body>
+
+<h2>Live Chat</h2>
+
+<input id="receiverId" placeholder="Receiver User ID">
+
+<div id="chatBox" style="border:1px solid #ccc;height:300px;overflow:auto"></div>
+
+<input id="messageInput" placeholder="Type message">
+
+<button onclick="sendMessage()">Send</button>
+
+<script>
+
+const socket = io("https://samtech-security.onrender.com")
+
+const myId = localStorage.getItem("userId") // store this after login
+
+// register user
+socket.emit("register", myId)
+
+// receive message
+socket.on("receiveMessage", (msg)=>{
+
+const chat = document.getElementById("chatBox")
+
+chat.innerHTML += `<p><b>${msg.from}:</b> ${msg.message}</p>`
+
+})
+
+// send message
+function sendMessage(){
+
+const message = document.getElementById("messageInput").value
+const to = document.getElementById("receiverId").value
+
+socket.emit("sendMessage", {
+from: myId,
+to: to,
+message: message
+})
+
+const chat = document.getElementById("chatBox")
+chat.innerHTML += `<p><b>You:</b> ${message}</p>`
+
+}
+async function loadMessages(){
+
+const token = localStorage.getItem("token")
+const to = document.getElementById("receiverId").value
+
+const res = await fetch(`https://samtech-security.onrender.com/api/messages/${to}`,{
+headers:{ "Authorization":token }
+})
+
+const data = await res.json()
+
+const chat = document.getElementById("chatBox")
+
+chat.innerHTML=""
+
+data.forEach(msg=>{
+chat.innerHTML += `<p><b>${msg.from}:</b> ${msg.message}</p>`
+})
+
+}
+</script>
+
+</body>
+</html>

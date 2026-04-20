@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Dashboard | SAMTECH SECURITY</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<script>
+const role = localStorage.getItem("role");
+
+if (role === "client") {
+  document.getElementById("clientMenu").style.display = "block";
+}
+
+if (role === "expert") {
+  document.getElementById("expertMenu").style.display = "block";
+}
+
+if (role === "admin") {
+  document.getElementById("adminMenu").style.display = "block";
+}
+</script>
+
+  <div class="sidebar">
+    <div class="logo">SAMTECH</div>
+    <ul>
+      <li><a href="dashboard-client.html">Dashboard</a></li>
+      <li><a href="post-job.html">Post Job</a></li>
+      <li><a href="messages.html">Messages</a></li>
+      <li><a href="profile.html">Profile</a></li>
+      <li><a href="#" onclick="logout()">Logout</a></li>
+    </ul>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <h2 id="welcomeText">Welcome Back</h2>
+      <div class="profile">
+        <span id="userName">Client</span>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="card">
+        <h3>Posted Jobs</h3>
+        <p id="postedJobsCount">0</p>
+      </div>
+      <div class="card">
+        <h3>Total Applicants</h3>
+        <p id="applicantsCount">0</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Your Jobs</h3>
+      <div id="clientJobsList">Loading jobs...</div>
+    </div>
+  </div>
+
+  
+
+  <script src="js/auth.js"></script>
+
+<script>
+const user = requireAuth();
+
+if (user.role !== "client") {
+  window.location.href = redirectByRole(user.role);
+}
+</script>
+
+  <script>
+    const API_URL = "https://samtech-security.onrender.com/api";
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
+    const userName = localStorage.getItem("name") || "Client";
+
+    document.getElementById("welcomeText").textContent = `Welcome Back, ${userName}`;
+    document.getElementById("userName").textContent = userName;
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "login.html";
+    }
+
+    async function loadClientDashboard() {
+      try {
+        const res = await fetch(`${API_URL}/jobs`, {
+          headers: {
+            "Authorization": token
+          }
+        });
+
+        const jobs = await res.json();
+        const container = document.getElementById("clientJobsList");
+
+        if (!Array.isArray(jobs)) {
+          container.innerHTML = "<p>Unable to load jobs.</p>";
+          return;
+        }
+
+        const myJobs = jobs.filter(job => {
+          if (!job.client) return false;
+          if (typeof job.client === "string") return job.client === userId;
+          return job.client._id === userId;
+        });
+
+        document.getElementById("postedJobsCount").textContent = myJobs.length;
+
+        let totalApplicants = 0;
+
+        for (const job of myJobs) {
+          try {
+            const appRes = await fetch(`${API_URL}/applications/job/${job._id}`, {
+              headers: { "Authorization": token }
+            });
+            const apps = await appRes.json();
+            if (Array.isArray(apps)) totalApplicants += apps.length;
+          } catch (e) {}
+        }
+
+        document.getElementById("applicantsCount").textContent = totalApplicants;
+
+        if (myJobs.length === 0) {
+          container.innerHTML = "<p>No jobs posted yet.</p>";
+          return;
+        }
+
+        container.innerHTML = myJobs.map(job => `
+          <div class="job-item">
+            <h4>${job.title}</h4>
+            <p>${job.description}</p>
+            <button onclick="viewApplicants('${job._id}')">View Applicants</button>
+          </div>
+        `).join("");
+      } catch (error) {
+        console.error(error);
+        document.getElementById("clientJobsList").innerHTML = "<p>Server connection failed.</p>";
+      }
+    }
+
+    function viewApplicants(jobId) {
+      window.location.href = `applicants.html?jobId=${jobId}`;
+    }
+
+    loadClientDashboard();
+  </script>
+</body>
+</html>

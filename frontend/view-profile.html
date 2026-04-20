@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>View Profile</title>
+</head>
+
+<body>
+
+<h2>Expert Profile</h2>
+
+<div id="profile"></div>
+
+<script>
+
+const params = new URLSearchParams(window.location.search)
+const id = params.get("id")
+
+async function loadProfile(){
+
+const res = await fetch("https://samtech-security.onrender.com/api/users/" + id)
+
+const user = await res.json()
+
+document.getElementById("profile").innerHTML = `
+
+<h3>${user.name}</h3>
+
+<p>${user.bio || ""}</p>
+
+<p>Skills: ${user.skills}</p>
+
+<p>Contact: ${user.contact?.phone || "Hidden"}</p>
+
+`
+
+}
+
+loadProfile()
+
+</script>
+
+</body>
+</html>

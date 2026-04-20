@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expert Dashboard | SAMTECH SECURITY</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<script src="js/auth.js"></script>
+
+<script>
+const user = requireAuth();
+
+if (user.role !== "expert") {
+  window.location.href = redirectByRole(user.role);
+}
+</script>
+
+  <div class="sidebar">
+    <div class="logo">SAMTECH</div>
+    <ul>
+      <li><a href="dashboard-expert.html">Dashboard</a></li>
+      <li><a href="marketplace.html">Available Jobs</a></li>
+      <li><a href="my-applications.html">My Applications</a></li>
+      <li><a href="messages.html">Messages</a></li>
+      <li><a href="profile.html">Profile</a></li>
+      <li><a href="#" onclick="logout()">Logout</a></li>
+    </ul>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <h2 id="welcomeText">Welcome Back</h2>
+      <div class="profile">
+        <span id="userName">Expert</span>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="card">
+        <h3>Available Jobs</h3>
+        <p id="jobsCount">0</p>
+      </div>
+      <div class="card">
+        <h3>My Applications</h3>
+        <p id="applicationsCount">0</p>
+      </div>
+      <div class="card">
+        <h3>Messages</h3>
+        <p>0</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Latest Opportunities</h3>
+      <div id="expertJobsList">Loading jobs...</div>
+    </div>
+  </div>
+
+  <script>
+const role = localStorage.getItem("role");
+
+if (role === "client") {
+  document.getElementById("clientMenu").style.display = "block";
+}
+
+if (role === "expert") {
+  document.getElementById("expertMenu").style.display = "block";
+}
+
+if (role === "admin") {
+  document.getElementById("adminMenu").style.display = "block";
+}
+</script>
+
+  <script>
+    const API_URL = "https://samtech-security.onrender.com/api";
+    const token = localStorage.getItem("token");
+    const userName = localStorage.getItem("name") || "Expert";
+
+    document.getElementById("welcomeText").textContent = `Welcome Back, ${userName}`;
+    document.getElementById("userName").textContent = userName;
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "login.html";
+    }
+
+    async function loadExpertDashboard() {
+      try {
+        const jobsRes = await fetch(`${API_URL}/jobs`);
+        const jobs = await jobsRes.json();
+
+        const jobsContainer = document.getElementById("expertJobsList");
+
+        if (!Array.isArray(jobs)) {
+          jobsContainer.innerHTML = "<p>Unable to load jobs.</p>";
+          return;
+        }
+
+        document.getElementById("jobsCount").textContent = jobs.length;
+
+        if (jobs.length === 0) {
+          jobsContainer.innerHTML = "<p>No jobs available at the moment.</p>";
+        } else {
+          jobsContainer.innerHTML = jobs.slice(0, 5).map(job => `
+            <div class="job-item">
+              <h4>${job.title}</h4>
+              <p>${job.description}</p>
+              <button onclick="window.location.href='marketplace.html'">View & Apply</button>
+            </div>
+          `).join("");
+        }
+
+        const appsRes = await fetch(`${API_URL}/applications/my`, {
+          headers: {
+            "Authorization": token
+          }
+        });
+
+        const apps = await appsRes.json();
+        document.getElementById("applicationsCount").textContent = Array.isArray(apps) ? apps.length : 0;
+      } catch (error) {
+        document.getElementById("expertJobsList").innerHTML = "<p>Server connection failed.</p>";
+      }
+    }
+
+    loadExpertDashboard();
+  </script>
+</body>
+</html>
