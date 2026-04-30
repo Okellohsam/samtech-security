@@ -26,15 +26,14 @@
     </p>
   </div>
 
-<script src="js/config.js"></script>
 <script src="js/auth.js"></script>
 
 <script>
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const email = email.value;
-  const password = password.value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
   const res = await fetch(`${API_URL}/auth/login`, {
     method: "POST",
@@ -49,7 +48,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     return;
   }
 
-  // RESET STORAGE (important fix)
+  // RESET STORAGE
   localStorage.clear();
 
   localStorage.setItem("token", data.token);
@@ -57,7 +56,13 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   localStorage.setItem("username", data.user.username);
   localStorage.setItem("name", data.user.name);
 
-  window.location.href = redirectByRole(data.user.role);
+  if (data.user.role === "client") {
+  window.location.href = "client-dashboard.html";
+} else if (data.user.role === "expert") {
+  window.location.href = "expert-dashboard.html";
+} else if (data.user.role === "admin") {
+  window.location.href = "admin-dashboard.html";
+}
 });
 </script>
 </body>
