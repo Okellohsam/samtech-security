@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+/>
+
+<title>
+SAMTECH SECURITY Services | Cybersecurity, Development & Technology Solutions
+</title>
+
+<meta
+name="description"
+content="SAMTECH SECURITY provides cybersecurity services, ethical hacking, software development, technology consulting, and digital solutions."
+/>
+
+<meta
+name="keywords"
+content="cybersecurity, ethical hacking, penetration testing, software development, programming, SAMTECH SECURITY"
+/>
+
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+/>
+
+<style>
+
+:root{
+--primary:#00ff9d;
+--secondary:#00d4ff;
+--bg:#050816;
+--card:#0f172a;
+--text:#ffffff;
+--muted:#94a3b8;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+html{
+scroll-behavior:smooth;
+}
+
+body{
+font-family:Segoe UI,sans-serif;
+background:var(--bg);
+color:white;
+overflow-x:hidden;
+}
+
+/* HERO */
+
+.hero{
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+padding:40px;
+background:
+radial-gradient(
+circle at top,
+rgba(0,255,157,.15),
+transparent 40%
+),
+#050816;
+position:relative;
+}
+
+.hero::before{
+content:"";
+position:absolute;
+width:600px;
+height:600px;
+background:rgba(0,255,157,.05);
+border-radius:50%;
+filter:blur(80px);
+}
+
+.hero-content{
+position:relative;
+z-index:2;
+max-width:900px;
+}
+
+.hero h1{
+font-size:4rem;
+margin-bottom:20px;
+}
+
+.hero h1 span{
+color:var(--primary);
+}
+
+.hero p{
+font-size:1.2rem;
+color:var(--muted);
+line-height:1.8;
+margin-bottom:35px;
+}
+
+.hero-buttons{
+display:flex;
+justify-content:center;
+gap:20px;
+flex-wrap:wrap;
+}
+
+.btn{
+padding:15px 30px;
+border-radius:12px;
+font-weight:700;
+text-decoration:none;
+transition:.3s;
+}
+
+.btn-primary{
+background:var(--primary);
+color:black;
+}
+
+.btn-secondary{
+border:1px solid var(--primary);
+color:var(--primary);
+}
+
+.btn:hover{
+transform:translateY(-5px);
+}
+
+/* SECTION */
+
+.section{
+padding:90px 8%;
+}
+
+.section-title{
+text-align:center;
+font-size:2.5rem;
+margin-bottom:60px;
+}
+
+.section-title span{
+color:var(--primary);
+}
+
+/* SERVICES */
+
+.services-grid{
+display:grid;
+grid-template-columns:
+repeat(auto-fit,minmax(280px,1fr));
+gap:30px;
+}
+
+.service-card{
+background:var(--card);
+padding:35px;
+border-radius:20px;
+border:1px solid rgba(255,255,255,.08);
+transition:.3s;
+}
+
+.service-card:hover{
+transform:translateY(-8px);
+box-shadow:
+0 15px 40px
+rgba(0,255,157,.15);
+}
+
+.service-card i{
+font-size:3rem;
+color:var(--primary);
+margin-bottom:20px;
+}
+
+.service-card h3{
+margin-bottom:15px;
+}
+
+.service-card p{
+color:var(--muted);
+line-height:1.7;
+}
+
+/* PRODUCTS */
+
+.products{
+background:#09111f;
+}
+
+.product-grid{
+display:grid;
+grid-template-columns:
+repeat(auto-fit,minmax(320px,1fr));
+gap:30px;
+}
+
+.product-card{
+background:var(--card);
+padding:40px;
+border-radius:20px;
+border:1px solid rgba(255,255,255,.08);
+}
+
+.product-card h3{
+font-size:1.8rem;
+margin-bottom:15px;
+}
+
+.product-card p{
+color:var(--muted);
+line-height:1.7;
+margin-bottom:25px;
+}
+
+/* COMMUNITY */
+
+.community-grid{
+display:grid;
+grid-template-columns:
+repeat(auto-fit,minmax(240px,1fr));
+gap:25px;
+}
+
+.social-card{
+text-decoration:none;
+background:var(--card);
+padding:25px;
+border-radius:18px;
+color:white;
+text-align:center;
+transition:.3s;
+border:1px solid rgba(255,255,255,.08);
+}
+
+.social-card:hover{
+transform:translateY(-6px);
+border-color:var(--primary);
+}
+
+.social-card i{
+font-size:2.5rem;
+margin-bottom:15px;
+color:var(--primary);
+}
+
+/* WHY US */
+
+.why-grid{
+display:grid;
+grid-template-columns:
+repeat(auto-fit,minmax(250px,1fr));
+gap:25px;
+}
+
+.why-card{
+background:var(--card);
+padding:30px;
+border-radius:18px;
+}
+
+.why-card h3{
+margin-bottom:15px;
+color:var(--primary);
+}
+
+.why-card p{
+color:var(--muted);
+line-height:1.7;
+}
+
+/* CONTACT */
+
+.contact{
+background:#09111f;
+}
+
+.contact-grid{
+display:grid;
+grid-template-columns:
+repeat(auto-fit,minmax(250px,1fr));
+gap:25px;
+}
+
+.contact-card{
+background:var(--card);
+padding:30px;
+border-radius:18px;
+text-align:center;
+}
+
+.contact-card i{
+font-size:2rem;
+color:var(--primary);
+margin-bottom:15px;
+}
+
+/* FOOTER */
+
+footer{
+padding:30px;
+text-align:center;
+border-top:1px solid rgba(255,255,255,.08);
+color:var(--muted);
+}
+
+/* RESPONSIVE */
+
+@media(max-width:768px){
+
+.hero h1{
+font-size:2.8rem;
+}
+
+.hero-buttons{
+flex-direction:column;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<section class="hero">
+
+<div class="hero-content">
+
+<h1>
+<span>SAMTECH</span> SECURITY
+</h1>
+
+<p>
+Professional Cybersecurity,
+Ethical Hacking,
+Software Development,
+Technology Consulting,
+Digital Solutions
+and Technical Training.
+</p>
+
+<div class="hero-buttons">
+
+<a
+href="#services"
+class="btn btn-primary"
+>
+Explore Services
+</a>
+
+<a
+href="#community"
+class="btn btn-secondary"
+>
+Join Community
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+<section
+id="services"
+class="section"
+>
+
+<h2 class="section-title">
+Our <span>Services</span>
+</h2>
+
+<div class="services-grid">
+
+<div class="service-card">
+<i class="fas fa-user-secret"></i>
+<h3>Ethical Hacking</h3>
+<p>
+Professional penetration testing,
+security assessments,
+and vulnerability analysis.
+</p>
+</div>
+
+<div class="service-card">
+<i class="fas fa-shield-halved"></i>
+<h3>Cybersecurity</h3>
+<p>
+Protect businesses and individuals
+from cyber threats and attacks.
+</p>
+</div>
+
+<div class="service-card">
+<i class="fas fa-code"></i>
+<h3>Software Development</h3>
+<p>
+Web applications,
+mobile apps,
+custom systems,
+and automation solutions.
+</p>
+</div>
+
+<div class="service-card">
+<i class="fas fa-server"></i>
+<h3>IT Consulting</h3>
+<p>
+Technology guidance,
+infrastructure planning
+and digital transformation.
+</p>
+</div>
+
+</div>
+
+</section>
+
+<section class="section products">
+
+<h2 class="section-title">
+Our <span>Products</span>
+</h2>
+
+<div class="product-grid">
+
+<div class="product-card">
+
+<h3>SAMTECH CONNECT</h3>
+
+<p>
+Technology marketplace connecting
+clients with cybersecurity experts,
+developers, designers and engineers.
+</p>
+
+<a href="#" class="btn btn-primary">
+Visit Platform
+</a>
+
+</div>
+
+<div class="product-card">
+
+<h3>SAMTECH LIBRARY</h3>
+
+<p>
+Download cybersecurity,
+ethical hacking and
+programming PDF resources.
+</p>
+
+<a href="#" class="btn btn-primary">
+Open Library
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+<section
+id="community"
+class="section"
+>
+
+<h2 class="section-title">
+Join Our <span>Community</span>
+</h2>
+
+<div class="community-grid">
+
+<a href="#" class="social-card">
+<i class="fab fa-whatsapp"></i>
+<h3>WhatsApp Channel</h3>
+</a>
+
+<a href="#" class="social-card">
+<i class="fab fa-youtube"></i>
+<h3>YouTube</h3>
+</a>
+
+<a href="#" class="social-card">
+<i class="fab fa-facebook"></i>
+<h3>Facebook</h3>
+</a>
+
+<a href="#" class="social-card">
+<i class="fab fa-instagram"></i>
+<h3>Instagram</h3>
+</a>
+
+<a href="#" class="social-card">
+<i class="fab fa-x-twitter"></i>
+<h3>X (Twitter)</h3>
+</a>
+
+</div>
+
+</section>
+
+<section class="section">
+
+<h2 class="section-title">
+Why Choose <span>SAMTECH SECURITY</span>
+</h2>
+
+<div class="why-grid">
+
+<div class="why-card">
+<h3>Trusted Expertise</h3>
+<p>
+Professional cybersecurity and
+software engineering experience.
+</p>
+</div>
+
+<div class="why-card">
+<h3>Community Driven</h3>
+<p>
+Growing network of developers,
+hackers and technology enthusiasts.
+</p>
+</div>
+
+<div class="why-card">
+<h3>Modern Solutions</h3>
+<p>
+Innovative technology services
+built for today's challenges.
+</p>
+</div>
+
+</div>
+
+</section>
+
+<section class="section contact">
+
+<h2 class="section-title">
+Contact <span>Us</span>
+</h2>
+
+<div class="contact-grid">
+
+<div class="contact-card">
+<i class="fas fa-envelope"></i>
+<h3>Email</h3>
+<p>bluckwolfhackerz@gmail.com</p>
+</div>
+
+<div class="contact-card">
+<i class="fas fa-phone"></i>
+<h3>Phone</h3>
+<p>+254 750 797 809</p>
+</div>
+
+<div class="contact-card">
+<i class="fas fa-globe"></i>
+<h3>Website</h3>
+<p>samtech-security.netlify.app</p>
+</div>
+
+</div>
+
+</section>
+
+<footer>
+
+© 2026 SAMTECH SECURITY.
+All Rights Reserved.
+
+</footer>
+
+</body>
+</html>
